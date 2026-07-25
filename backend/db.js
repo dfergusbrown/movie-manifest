@@ -3,7 +3,7 @@ import path from "path";
 import fs from "fs";
 
 const dataDir = path.join(import.meta.dirname, "data");
-const dbPath = path.jsoin(dataDir, "movies.db");
+const dbPath = path.join(dataDir, "movies.db");
 
 if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
 export const db = new Database(dbPath);
