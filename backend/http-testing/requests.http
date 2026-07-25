@@ -1,0 +1,30 @@
+@base_url = http://localhost:3001/
+@upcmdb_url = https://us-central1-upcmdb-cbae5.cloudfunctions.net/api
+@test_upc = 012569593503
+
+
+GET {{base_url}}movies HTTP/1.1
+
+###
+
+GET {{upcmdb_url}}/v1/lookup/{{test_upc}} HTTP/1.1
+x-api-key: /* find in .env file */
+
+###
+
+POST {{base_url}}movies HTTP/1.1
+content-type: application/json
+
+{
+  "upc": "012569593503",
+  "title": "Corpse Bride",
+  "year": "2005",
+  "type": "movie",
+  "format": "DVD",
+  "poster_url": "https://imagestorage.org/012569593503.jpg",
+  "added_by": "ferg"
+}
+
+###
+
+GET {{base_url}}movies/:1 HTTP/1.1

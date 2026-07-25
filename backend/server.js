@@ -11,7 +11,7 @@ app.get("/", (req, res) => {
   res.send("YO YO YO wassup!");
 });
 
-// app.use("/movies", router);
+app.use("/movies", router);
 
 app.listen(port, () => {
   console.log(`app listening on port ${port}`);
