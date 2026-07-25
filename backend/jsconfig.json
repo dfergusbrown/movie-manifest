@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "target": "es2022",
+    "module": "es2022"
+  },
+  "include": ["**/*.js"],
+  "exclude": ["node_modules"]
+}
