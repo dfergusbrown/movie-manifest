@@ -84,4 +84,24 @@ router.patch("/:id", (req, res) => {
   res.status(201).json({ updated: result.changes });
 });
 
+/**
+ * DELETE individual movie
+ * @type {import('express').RequestHandler}
+ */
+router.delete("/:id", (req, res) => {
+  const id = req.params.id;
+
+  const stmt = db.prepare(`
+    DELETE FROM media_items
+    WHERE id = @id
+    `);
+  const result = stmt.run({ id });
+
+  if (result.changes === 0) {
+    return res.status(400).json({ error: "Resource was NOT deleted" });
+  }
+
+  res.status(200).json({ updated: result.changes });
+});
+
 export default router;

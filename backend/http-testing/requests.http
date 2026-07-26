@@ -27,7 +27,7 @@ content-type: application/json
 
 ###
 
-GET {{base_url}}movies/1 HTTP/1.1
+GET {{base_url}}movies/2 HTTP/1.1
 
 ### 
 
@@ -38,3 +38,7 @@ content-type: application/json
   "format": "DVD",
   "added_by": "ferg"
 }
+
+###
+
+DELETE {{base_url}}movies/1 HTTP/1.1
