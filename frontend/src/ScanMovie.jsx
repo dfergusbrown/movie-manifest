@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { BrowserMultiFormatReader } from "@zxing/library";
 
-function BardodeScanner({ onScan }) {
+function BarcodeScanner({ onScan }) {
   const videoRef = useRef(null);
   const [error, setError] = useState(null);
 
