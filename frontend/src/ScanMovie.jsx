@@ -32,6 +32,8 @@ const setHints = () => {
 const BarcodeScanner = ({ onScan }) => {
   const videoRef = useRef(null);
   const [error, setError] = useState(null);
+  const [barcodeResult, setBarcodeResult] = useState(null);
+
   useEffect(() => {
     overRideConsoleWarnings();
     const hints = setHints();
@@ -45,11 +47,20 @@ const BarcodeScanner = ({ onScan }) => {
           },
           videoRef.current,
           (result, err) => {
-            if (result) {
-              onScan(result.getText());
-            }
             if (err && !(err instanceof NotFoundException)) {
               console.error(err);
+            }
+            if (result) {
+              const scanResult = result.getText();
+
+              if (scanResult.test(/^\d{12}$/)) {
+                onScan(result.getText());
+                setBarcodeResult(scanResult);
+                controls?.stop();
+              } else {
+                setError(`Barcode Invalid: ${scanResult}`);
+                controls?.stop();
+              }
             }
           },
         );
@@ -62,6 +73,7 @@ const BarcodeScanner = ({ onScan }) => {
     return () => {
       //   stream?.getTracks().forEach((track) => track.stop());
       controls?.stop();
+      console.log("FINAL RESULT", barcodeResult);
     };
     // listDevices();
   }, [onScan]);
@@ -69,7 +81,13 @@ const BarcodeScanner = ({ onScan }) => {
   if (error) return <div>Camera error: {error}</div>;
 
   return (
-    <video ref={videoRef} autoPlay playsInline className="w-full rounded-lg" />
+    <video
+      ref={videoRef}
+      autoPlay
+      playsInline
+      className="w-full rounded-lg"
+      style={{ height: "100vh" }}
+    />
   );
 };
 
