@@ -13,9 +13,9 @@ const HomePage = () => {
             LIST
           </NavLink>
           {/* <button className="text-3xl p-3 border-4 rounded-xl m-3">LIST</button> */}
-          <button className="text-3xl p-3 border-4 rounded-xl m-3">
+          <NavLink className="text-3xl p-3 border-4 rounded-xl m-3" to="/add">
             ADD MOVIE
-          </button>
+          </NavLink>
         </div>
       </section>
     </div>
