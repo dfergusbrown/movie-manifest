@@ -1,32 +1,70 @@
 import { useEffect, useRef, useState } from "react";
 import { BrowserMultiFormatReader } from "@zxing/browser";
-const BarcodeScanner = () => {
-  const videoRef = useRef();
+import {
+  BarcodeFormat,
+  DecodeHintType,
+  NotFoundException,
+} from "@zxing/library";
+
+const overRideConsoleWarnings = () => {
+  const originalWarn = console.warn;
+  const originalError = console.error;
+  console.warn = (...args) => {
+    if (typeof args[0] === "string" && args[0].includes("non-ReaderException"))
+      return;
+  };
+  console.error = (...args) => {
+    if (typeof args[0] === "string" && args[0].includes("nonReaderException"))
+      return;
+    originalError(...args);
+  };
+};
+
+const setHints = () => {
+  const hints = new Map();
+  hints.set(DecodeHintType.POSSIBLE_FORMATS, [
+    BarcodeFormat.UPC_A,
+    BarcodeFormat.EAN_13,
+  ]);
+  return hints;
+};
+
+const BarcodeScanner = ({ onScan }) => {
+  const videoRef = useRef(null);
   const [error, setError] = useState(null);
   useEffect(() => {
-    async function listDevices() {
-      const reader = new BrowserMultiFormatReader();
-      // const scanResult = reader.scanOneResult();
-      // const scanResult = reader.scan();
-    }
-    let stream;
-    async function startCamera() {
+    overRideConsoleWarnings();
+    const hints = setHints();
+    const reader = new BrowserMultiFormatReader(hints);
+    let controls;
+    async function startScanning() {
       try {
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: "environment" },
-        });
-        videoRef.current.srcObject = stream;
-      } catch (err) {
-        setError(err.message);
+        controls = await reader.decodeFromConstraints(
+          {
+            video: { facingMode: "environment" },
+          },
+          videoRef.current,
+          (result, err) => {
+            if (result) {
+              onScan(result.getText());
+            }
+            if (err && !(err instanceof NotFoundException)) {
+              console.error(err);
+            }
+          },
+        );
+      } catch (e) {
+        setError(e.message);
       }
     }
-    startCamera();
-    // Cleanup
+    startScanning();
+
     return () => {
-      stream?.getTracks().forEach((track) => track.stop());
+      //   stream?.getTracks().forEach((track) => track.stop());
+      controls?.stop();
     };
     // listDevices();
-  }, []);
+  }, [onScan]);
 
   if (error) return <div>Camera error: {error}</div>;
 
