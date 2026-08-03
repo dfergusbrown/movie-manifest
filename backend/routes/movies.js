@@ -105,3 +105,36 @@ router.delete("/:id", (req, res) => {
 });
 
 export default router;
+
+/**
+ * LOOKUP upc via upcmdb
+ */
+router.get("/upclookup/:upc", async (req, res) => {
+  const { upc } = req.params;
+  const apiBaseURL = process.env.UPCMDB_BASE_URL;
+  const apiKey = process.env.UPCMDB_API_KEY;
+  if (!apiKey || !apiBaseURL) {
+    throw new Error("apiKey or apiBaseURL is not set");
+  }
+  const headers = {
+    "Content-Type": "application/json",
+    "x-api-key": apiKey,
+  };
+
+  try {
+    const response = await fetch(`${apiBaseURL}/v1/lookup/${upc}`, {
+      method: "GET",
+      headers,
+    });
+    const item = await response.json();
+
+    res.status(200).json({
+      upc,
+      title: item.title || "",
+      year: item.year ? Number(item.year) : null,
+      poster_url: item.productImageUrl || null,
+    });
+  } catch (error) {
+    res.status(502).json({ error: "Lookup service unavailable" });
+  }
+});
