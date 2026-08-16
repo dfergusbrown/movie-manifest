@@ -5,6 +5,7 @@ import {
   DecodeHintType,
   NotFoundException,
 } from "@zxing/library";
+import { useNavigate } from "react-router-dom";
 
 const overRideConsoleWarnings = () => {
   const originalWarn = console.warn;
@@ -33,6 +34,8 @@ const BarcodeScanner = ({ onScan }) => {
   const videoRef = useRef(null);
   const [error, setError] = useState(null);
   const [barcodeResult, setBarcodeResult] = useState(null);
+  const navigate = useNavigate();
+  const regexp = /^\d{12}$/;
 
   useEffect(() => {
     overRideConsoleWarnings();
@@ -52,11 +55,13 @@ const BarcodeScanner = ({ onScan }) => {
             }
             if (result) {
               const scanResult = result.getText();
+              console.log(scanResult);
 
-              if (scanResult.test(/^\d{12}$/)) {
+              if (regexp.test(scanResult)) {
                 onScan(result.getText());
                 setBarcodeResult(scanResult);
                 controls?.stop();
+                navigate(`/search/${scanResult}`);
               } else {
                 setError(`Barcode Invalid: ${scanResult}`);
                 controls?.stop();

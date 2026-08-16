@@ -5,6 +5,7 @@ import HomePage from "./pages/home";
 import List from "./pages/List";
 import BarcodeScanner from "./ScanMovie";
 import { NotFoundException } from "@zxing/library";
+import ConfirmTitle from "./pages/confirmTitle";
 
 function App() {
   const printCode = (code) => {
@@ -21,6 +22,7 @@ function App() {
         path="/add"
         element={<BarcodeScanner onScan={(code) => printCode(code)} />}
       />
+      <Route path="/search/:upc" element={<ConfirmTitle />} />
     </Routes>
   );
 }
