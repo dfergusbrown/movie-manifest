@@ -1,5 +1,5 @@
 import express from "express";
-import router from "./routes/movies.js";
+import router from "./src/routes/movies.js";
 import cors from "cors";
 import "dotenv/config";
 
