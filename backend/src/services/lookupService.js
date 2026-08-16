@@ -10,7 +10,9 @@ class LookupService {
   }
 
   /**
-   * Look up using upcitemdb
+   *
+   * @param {number} upc
+   * @returns
    */
   async upcLookup(upc) {
     try {
