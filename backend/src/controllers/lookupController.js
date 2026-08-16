@@ -19,7 +19,10 @@ class LookupController {
       const result = await lookupService.upcLookup(Number(upc));
       console.log("result");
       console.log(result);
-      return res.status(200).json(result);
+      if (!result) {
+        return res.status(400).send("No result returned from barcode lookup");
+      }
+      return res.status(200).json({ result: result });
     } catch (error) {
       return res.status(400).json({ errorMessage: error });
     }

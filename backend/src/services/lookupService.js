@@ -19,11 +19,13 @@ class LookupService {
       console.log({
         baseURL: this.BASE_URL,
       });
-      const result = await fetch(`${this.BASE_URL}?upc=${upc}`, {
+      const response = await fetch(`${this.BASE_URL}?upc=${upc}`, {
         method: "GET",
         headers: this.headers,
       });
-      return result;
+      console.log("lookupService response");
+      console.log(response);
+      return response.json();
     } catch (error) {
       console.error(error);
     }
