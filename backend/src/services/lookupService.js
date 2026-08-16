@@ -26,10 +26,11 @@ class LookupService {
       });
       if (!response.ok)
         throw new Error(`upcitemdb request failed: ${response.status}`);
-      const raw = response.json();
+      const raw = await response.json();
       return mapUpcItemDbResponse(raw);
     } catch (error) {
       console.error(error);
+      throw error;
     }
   }
 }
