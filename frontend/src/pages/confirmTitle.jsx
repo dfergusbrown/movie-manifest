@@ -5,14 +5,14 @@ import { lookupByUPC } from "../apiHelper";
 const ConfirmTitle = () => {
   const { upc } = useParams();
   const [resultData, setResultData] = useState(null);
+  const [posters, setPosters] = useState([]);
 
   useEffect(() => {
     console.log("confirm result upc:", upc);
     const upcLookup = async () => {
       try {
-        const result = await lookupByUPC(upc);
-        console.log("confirm result-- Actual result");
-        console.log(result);
+        const product = await lookupByUPC(upc);
+        if (product) setPosters(product.allImages);
       } catch (error) {
         console.log("*** useEffect Error ***");
         console.error(error);
@@ -21,7 +21,7 @@ const ConfirmTitle = () => {
     upcLookup();
   }, []);
 
-  if (!resultData) {
+  if (!posters || posters.length === 0) {
     return <div>Loading...</div>;
   }
 
@@ -29,7 +29,12 @@ const ConfirmTitle = () => {
     <div>
       <section>
         <h1>RESULT FOUND</h1>
-        <img src="" alt="" />
+        {posters.map((url) => (
+          <div>
+            <p>image placeholder</p>
+            <image src={url} height={"100px"} />
+          </div>
+        ))}
       </section>
     </div>
   );

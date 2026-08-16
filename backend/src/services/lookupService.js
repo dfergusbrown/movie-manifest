@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import { mapUpcItemDbResponse } from "./mapBarcodeResponse.js";
 dotenv.config();
 
 class LookupService {
@@ -23,9 +24,10 @@ class LookupService {
         method: "GET",
         headers: this.headers,
       });
-      console.log("lookupService response");
-      console.log(response);
-      return response.json();
+      if (!response.ok)
+        throw new Error(`upcitemdb request failed: ${response.status}`);
+      const raw = response.json();
+      return mapUpcItemDbResponse(raw);
     } catch (error) {
       console.error(error);
     }
